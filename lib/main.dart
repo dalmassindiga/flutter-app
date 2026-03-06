@@ -18,7 +18,7 @@ void main() {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset('car.png', height: 100, width: 100),
+                    Image.asset('assets/BM logo.jpg', height: 100, width: 100),
                     Text("Login Screen", style: TextStyle(fontSize: 20)),
 
                     Padding(
