@@ -113,7 +113,13 @@ void main() {
                           Spacer(),
                           Text("Forgot password?"),
                           SizedBox(width: 5),
-                          Text("Reset Password"),
+                          Text(
+                            "Reset Password",
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ],
                       ),
                     ),
