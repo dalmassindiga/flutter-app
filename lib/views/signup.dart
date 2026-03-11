@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/configs/colors.dart' show primaryColor;
+import 'package:flutter_application_1/configs/colors.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -11,7 +11,7 @@ class SignUpPage extends StatelessWidget {
 
       appBar: AppBar(
         title: const Text("Sign Up"),
-        backgroundColor: primaryColor,
+        backgroundColor: Colors.white,
       ),
 
       body: Padding(
@@ -129,12 +129,12 @@ class SignUpPage extends StatelessWidget {
                 height: 50,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: primaryColor,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
                   "Sign Up",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color:primaryColor, fontSize: 16),
                 ),
               ),
 
