@@ -6,8 +6,10 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 void main() {
   runApp(
     GetMaterialApp(
-      initialRoute: "/",
+      initialRoute: "/homescreen",
       getPages: routes,
-      debugShowCheckedModeBanner: false, home: LoginScreen()),
+      debugShowCheckedModeBanner: false,
+      home: LoginScreen(),
+    ),
   );
 }
