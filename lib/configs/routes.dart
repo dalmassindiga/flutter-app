@@ -1,4 +1,5 @@
 import 'package:flutter_application_1/views/login.dart';
+import 'package:flutter_application_1/views/orders.dart';
 import 'package:flutter_application_1/views/signup.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_1/views/homescreen.dart';
@@ -11,4 +12,5 @@ var routes = [
   GetPage(name: "/homescreen", page: () => HomeScreen()),
   GetPage(name: "/dashboard", page: () => DashboardScreen()),
   GetPage(name: "/profilescreen", page: () => ProfileScreen()),
+  GetPage(name: "/ordersscreen", page: () => OrdersScreen()),
 ];
