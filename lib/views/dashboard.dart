@@ -17,21 +17,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
           Text(
-            "Car Dashboard",
+            " Dashboard",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 20),
-          Text("Car Status: Good"),
+          Text("Car Status"),
           SizedBox(height: 10),
           Text("Upcoming Services: Oil Change, Tire Rotation"),
         ],
       ),
     ),
-    Center(child: Text("Service History Content")),
-    Center(child: Text("Expenses Content")),
-    Center(child: Text("Profile Content")),
+    Center(child: Text("Service History ")),
+    Center(child: Text("Expenses")),
+    Center(child: Text("Profile")),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,10 +41,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         color: Colors.white,
         height: 60,
         items: const <Widget>[
-          Icon(Icons.directions_car, size: 30), // Dashboard
-          Icon(Icons.build, size: 30), // Service History
-          Icon(Icons.attach_money, size: 30), // Expenses
-          Icon(Icons.person, size: 30), // Profile
+          Icon(Icons.directions_car, size: 30), 
+          Icon(Icons.build, size: 30), 
+          Icon(Icons.attach_money, size: 30),
+          Icon(Icons.person, size: 30), 
         ],
         onTap: (index) {
           setState(() {

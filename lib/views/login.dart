@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     onTap: () {
-                      Get.offAndToNamed("/homescreen");
+                      Get.toNamed("/homescreen");
                     },
                   ),
 
