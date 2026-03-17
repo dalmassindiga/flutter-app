@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/colors.dart';
+import 'package:flutter_application_1/views/profile.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_1/views/maintenance.dart';
 import 'package:flutter_application_1/views/settings.dart';
@@ -19,11 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-           "Dashboard",
+          "Dashboard",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 20),
-        Text("Car Status: Good"),
+        Text("Car Status"),
         SizedBox(height: 10),
         Text("Upcoming Services: Oil Change, Tire Rotation"),
       ],
@@ -33,9 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      dashboardContent, 
-      const Center(child: Text("Expenses Content")), 
-      const Center(child: Text("Profile Content")), 
+      dashboardContent,
+      const Center(child: Text("Expenses Content")),
+      const Center(child: Text("Profile Content")),
     ];
 
     return Scaffold(
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (index) {
           setState(() {
             if (index == 0) {
-              currentIndex = 0; 
+              currentIndex = 0;
             } else if (index == 1)
               // ignore: curly_braces_in_flow_control_structures
               Get.to(() => const MaintenanceScreen());
@@ -69,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ); // <-- Settings opens new screen
             else if (index == 4)
               // ignore: curly_braces_in_flow_control_structures
-              currentIndex = 2; // Profile
+              Get.to(() => const ProfileScreen()); // Profile
           });
         },
       ),

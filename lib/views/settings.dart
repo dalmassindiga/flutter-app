@@ -49,19 +49,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.lock),
             title: const Text("Change Password"),
             onTap: () {
-              Get.snackbar(
-                "Change Password",
-                "Here you would navigate to the password screen.",
-              );
+              Get.snackbar("Change Password", "Go to login.");
             },
           ),
           ListTile(
             leading: const Icon(Icons.info),
-            title: const Text("About App"),
+            title: const Text("App Info"),
             onTap: () {
               showAboutDialog(
                 context: context,
-                applicationName: "Car Maintenance App",
+                applicationName: "WrenchWise",
                 applicationVersion: "1.0",
                 applicationIcon: Image.asset(
                   "assets/BM logo.jpg",
@@ -70,7 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 children: [
                   const Text(
-                    "This app helps you manage your cars and maintenance.",
+                    "maintenance redefined.",
                   ),
                 ],
               );
