@@ -6,12 +6,13 @@ class MaintenanceScreen extends StatefulWidget {
   @override
   State<MaintenanceScreen> createState() => _MaintenanceScreenState();
 }
+
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
   final maintenanceRecords = [
     {
       "car": "Toyota Supra",
       "service": "Oil Change",
-      "date": "12 Mar 2026",
+      "date": "31 Mar 2026",
       "status": "Scheduled",
       "img": "assets/Toyota Supra.jpeg",
     },
@@ -23,7 +24,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       "img": "assets/Honda Civic Type R.jpeg",
     },
     {
-      "car": "Subaru WRX STI",
+      "car": "Subaru wrx sti",
       "service": "Tire Rotation",
       "date": "14 Mar 2026",
       "status": "In Progress",
@@ -47,10 +48,10 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(10),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, 
+          crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          childAspectRatio: 0.75, 
+          childAspectRatio: 0.75,
         ),
         itemCount: maintenanceRecords.length,
         itemBuilder: (context, i) {
