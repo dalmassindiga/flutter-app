@@ -65,12 +65,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   width: 50,
                   height: 50,
                 ),
-                children: [
-                  const Text(
-                    "maintenance redefined.",
-                  ),
-                ],
+                children: [const Text("maintenance redefined.")],
               );
+            },
+          ),
+          const Divider(),
+
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text("Logout", style: TextStyle(color: Colors.red)),
+            onTap: () {
+              Get.offAllNamed("/login"); // go to login & clear stack
             },
           ),
         ],
