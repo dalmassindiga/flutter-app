@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/colors.dart';
 import 'package:flutter_application_1/controllers/logincontroller.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 Logincontroller loginController = Get.put(Logincontroller());
-TextEditingController usernameController = TextEditingController();
-TextEditingController passwordController = TextEditingController();
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +15,52 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  bool _isLoading = false;
+
+  Future<void> login() async {
+    String email = usernameController.text.trim();
+    String password = passwordController.text.trim();
+
+    // Validation
+    if (email.isEmpty || password.isEmpty) {
+      Get.snackbar("Error", "Please fill in all fields");
+      return;
+    }
+
+    if (!email.contains('@') || !email.contains('.')) {
+      Get.snackbar("Error", "Enter a valid email address");
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          "http://localhost/flutter_application_1/login.php?email=$email&password=$password",
+        ),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (data['success'] == 1) {
+        Get.snackbar("Success", "Login successful!");
+        // Save user data
+        final user = data['data'];
+        Get.toNamed("/homescreen", arguments: user);
+      } else {
+        Get.snackbar("Login Failed", "Invalid email or password");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Could not connect to server");
+    }
+
+    setState(() => _isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       TextField(
                         controller: usernameController,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -101,14 +148,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             hintStyle: TextStyle(color: Colors.white54),
                             prefixIcon: Icon(Icons.lock, color: Colors.white),
                             suffixIcon: GestureDetector(
+                              onTap: () {
+                                loginController.togglePassword();
+                              },
                               child: Icon(
                                 loginController.isPasswordVisible.value
                                     ? Icons.visibility_off
                                     : Icons.visibility,
                               ),
-                              onTap: () {
-                                loginController.togglePassword();
-                              },
                             ),
                           ),
                         ),
@@ -117,32 +164,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 15),
 
                       GestureDetector(
-                        onTap: () {
-                          bool success = loginController.login(
-                            usernameController.text,
-                            passwordController.text,
-                          );
-
-                          if (success) {
-                            Get.toNamed("/homescreen");
-                          } else {
-                            Get.snackbar(
-                              "Login Failed",
-                              "Invalid username or password",
-                            );
-                          }
-                        },
+                        onTap: _isLoading ? null : login,
                         child: Container(
                           height: 50,
+                          width: double.infinity,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: primaryColor,
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
                         ),
                       ),
 
