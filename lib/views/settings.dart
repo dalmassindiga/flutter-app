@@ -75,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text("Logout", style: TextStyle(color: Colors.red)),
             onTap: () {
-              Get.offAllNamed("/login"); // go to login & clear stack
+              Get.offAllNamed("/");
             },
           ),
         ],

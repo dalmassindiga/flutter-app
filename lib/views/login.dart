@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Get.snackbar("Success", "Login successful!");
         // Save user data
         final user = data['data'];
-        Get.toNamed("/homescreen", arguments: user);
+        Get.offNamed("/homescreen", arguments: user);
       } else {
         Get.snackbar("Login Failed", "Invalid email or password");
       }
