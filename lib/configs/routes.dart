@@ -5,16 +5,22 @@ import 'package:flutter_application_1/views/cars.dart';
 import 'package:flutter_application_1/views/addcarscreen.dart';
 import 'package:flutter_application_1/views/addmaintenancescreen.dart';
 import 'package:flutter_application_1/views/dashboard.dart';
+import 'package:flutter_application_1/views/settings.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_1/views/homescreen.dart';
 import 'package:flutter_application_1/views/profile.dart';
-import 'package:flutter_application_1/views/settings.dart';
 
 var routes = [
   GetPage(name: "/", page: () => const LoginScreen()),
   GetPage(name: "/signup", page: () => const SignUpPage()),
   GetPage(name: "/homescreen", page: () => const HomeScreen()),
-  GetPage(name: "/settingsscreen", page: () => const SettingsScreen()),
+  GetPage(
+    name: "/settingsscreen",
+    page: () {
+      final args = Get.arguments as Map<String, dynamic>? ?? {};
+      return SettingsScreen(userId: args['user_id'] ?? 0);
+    },
+  ),
   GetPage(
     name: "/profilescreen",
     page: () => ProfileScreen(user: Get.arguments ?? {}),

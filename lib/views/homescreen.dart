@@ -24,15 +24,21 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     user = Get.arguments ?? {};
     userId = int.tryParse(user['id'].toString()) ?? 0;
+    ever(
+      Get.rootController.theme as RxInterface<Object?>,
+      (_) => setState(() {}),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Get.isDarkMode;
+
     final pages = [
       DashboardScreen(userId: userId, firstname: user['firstname'] ?? 'User'),
       CarsScreen(userId: userId),
-      ExpensesScreen(userId: userId),
-      const SettingsScreen(),
+      ExpensesScreen(key: ValueKey(currentIndex), userId: userId),
+      SettingsScreen(userId: userId),
       ProfileScreen(user: user),
     ];
 
@@ -41,15 +47,35 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: primaryColor,
         buttonBackgroundColor: secondaryColor,
-        color: Colors.white,
+        color: isDark ? Colors.grey[900]! : Colors.white,
         height: 60,
         index: currentIndex,
-        items: const [
-          Icon(Icons.home, size: 30, color: Colors.white),
-          Icon(Icons.directions_car, size: 30),
-          Icon(Icons.attach_money, size: 30),
-          Icon(Icons.settings, size: 30),
-          Icon(Icons.person, size: 30),
+        items: [
+          Icon(
+            Icons.home,
+            size: 30,
+            color: isDark ? Colors.white : primaryColor,
+          ),
+          Icon(
+            Icons.directions_car,
+            size: 30,
+            color: isDark ? Colors.white : primaryColor,
+          ),
+          Icon(
+            Icons.attach_money,
+            size: 30,
+            color: isDark ? Colors.white : primaryColor,
+          ),
+          Icon(
+            Icons.settings,
+            size: 30,
+            color: isDark ? Colors.white : primaryColor,
+          ),
+          Icon(
+            Icons.person,
+            size: 30,
+            color: isDark ? Colors.white : primaryColor,
+          ),
         ],
         onTap: (index) {
           setState(() => currentIndex = index);
