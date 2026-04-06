@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+const String baseUrl = 'http://localhost/flutter_application_1';
 Logincontroller loginController = Get.put(Logincontroller());
 
 class LoginScreen extends StatefulWidget {
@@ -24,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
     String email = usernameController.text.trim();
     String password = passwordController.text.trim();
 
-    // Validation
     if (email.isEmpty || password.isEmpty) {
       Get.snackbar("Error", "Please fill in all fields");
       return;
@@ -39,16 +39,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse(
-          "http://localhost/flutter_application_1/login.php?email=$email&password=$password",
-        ),
+        Uri.parse("$baseUrl/login.php?email=$email&password=$password"),
       );
 
       final data = jsonDecode(response.body);
 
       if (data['success'] == 1) {
         Get.snackbar("Success", "Login successful!");
-        // Save user data
         final user = data['data'];
         Get.offNamed("/homescreen", arguments: user);
       } else {
@@ -61,171 +58,258 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = false);
   }
 
+  void _showResetPassword() {
+    final formKey = GlobalKey<FormState>();
+    final emailController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    bool isLoading = false;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Reset Password'),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Email address',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.email),
+                  ),
+                  validator: (val) => val!.isEmpty || !val.contains('@')
+                      ? 'Enter a valid email'
+                      : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: newPasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'New Password',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock),
+                  ),
+                  validator: (val) => val!.length < 6
+                      ? 'Password must be at least 6 characters'
+                      : null,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                      if (formKey.currentState!.validate()) {
+                        setDialogState(() => isLoading = true);
+                        try {
+                          final response = await http.post(
+                            Uri.parse('$baseUrl/reset_password.php'),
+                            body: {
+                              'email': emailController.text.trim(),
+                              'password': newPasswordController.text.trim(),
+                            },
+                          );
+                          final data = jsonDecode(response.body);
+                          if (data['success'] == 1) {
+                            // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
+                            Get.snackbar(
+                              'Success',
+                              'Password reset successfully. Please login.',
+                            );
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              data['error'] ?? 'Email not found',
+                            );
+                          }
+                        } catch (e) {
+                          Get.snackbar('Error', 'Something went wrong: $e');
+                        } finally {
+                          setDialogState(() => isLoading = false);
+                        }
+                      }
+                    },
+              child: isLoading
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Reset'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/garage.jpg'),
             fit: BoxFit.cover,
           ),
         ),
-        child: Builder(
-          builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/BM logo.jpg',
-                        height: 100,
-                        width: 100,
-                      ),
-                      const Text(
-                        "WrenchWise",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset('assets/BM logo.jpg', height: 100, width: 100),
+                  const Text(
+                    "WrenchWise",
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
 
-                      const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Enter username",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Enter username",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  TextField(
+                    controller: usernameController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      hintText: "Use email or phone number",
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      prefixIcon: const Icon(Icons.person),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Enter password",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Obx(
+                    () => TextField(
+                      obscureText: loginController.isPasswordVisible.value,
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        hintText: "PIN or password",
+                        hintStyle: const TextStyle(color: Colors.white54),
+                        prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                        suffixIcon: GestureDetector(
+                          onTap: () => loginController.togglePassword(),
+                          child: Icon(
+                            loginController.isPasswordVisible.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
                           ),
                         ),
                       ),
+                    ),
+                  ),
 
-                      const SizedBox(height: 5),
+                  const SizedBox(height: 15),
 
-                      TextField(
-                        controller: usernameController,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          hintText: "Use email or phone number",
-                          hintStyle: TextStyle(color: Colors.white54),
-                          prefixIcon: Icon(Icons.person),
-                        ),
+                  GestureDetector(
+                    onTap: _isLoading ? null : login,
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(20),
                       ),
-
-                      const SizedBox(height: 10),
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Enter password",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      Obx(
-                        () => TextField(
-                          obscureText: loginController.isPasswordVisible.value,
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            hintText: "PIN or password",
-                            hintStyle: TextStyle(color: Colors.white54),
-                            prefixIcon: Icon(Icons.lock, color: Colors.white),
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                loginController.togglePassword();
-                              },
-                              child: Icon(
-                                loginController.isPasswordVisible.value
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                              "Login",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
                               ),
                             ),
-                          ),
-                        ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Row(
+                    children: [
+                      const Text(
+                        "Don't have an account?",
+                        style: TextStyle(color: Colors.white),
                       ),
-
-                      const SizedBox(height: 15),
-
+                      const SizedBox(width: 5),
                       GestureDetector(
-                        onTap: _isLoading ? null : login,
-                        child: Container(
-                          height: 50,
-                          width: double.infinity,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: _isLoading
-                              ? const CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
-                              : const Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                        onTap: () => Get.toNamed("/signup"),
+                        child: const Text(
+                          "Signup",
+                          style: TextStyle(color: Colors.blue),
                         ),
                       ),
-
-                      const SizedBox(height: 10),
-
-                      Row(
-                        children: [
-                          Text(
-                            "Don't have an account?",
-                            style: TextStyle(color: Colors.white),
+                      const Spacer(),
+                      const Text(
+                        "Forgot password?",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      const SizedBox(width: 5),
+                      GestureDetector(
+                        onTap: _showResetPassword,
+                        child: const Text(
+                          "Reset Password",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w700,
                           ),
-                          SizedBox(width: 5),
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed("/signup");
-                            },
-                            child: Text(
-                              "Signup",
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            "Forgot password?",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            "Reset Password",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
