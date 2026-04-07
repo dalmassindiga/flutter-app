@@ -116,6 +116,7 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
                             });
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
+                            Get.back(result: true);
                             Get.snackbar('Success', 'Car updated successfully');
                           } else {
                             Get.snackbar(
