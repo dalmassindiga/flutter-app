@@ -108,15 +108,16 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
                           );
                           final data = jsonDecode(response.body);
                           if (data['success'] == 1) {
+                            // Update the local car data and refresh UI
                             setState(() {
                               car['brand'] = brandController.text.trim();
                               car['model'] = modelController.text.trim();
                               car['year'] = yearController.text.trim();
                               car['mileage'] = mileageController.text.trim();
                             });
+                            // Close the dialog only
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
-                            Get.back(result: true);
                             Get.snackbar('Success', 'Car updated successfully');
                           } else {
                             Get.snackbar(
@@ -161,6 +162,7 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Rebuild car name dynamically so it updates after edit
     final String carName = '${car['brand']} ${car['model']}';
     final String imagePath = car['image_path'] ?? '';
 

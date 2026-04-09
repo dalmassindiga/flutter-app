@@ -72,27 +72,11 @@ class _AddMaintenanceScreenState extends State<AddMaintenanceScreen> {
     );
     if (picked != null) {
       setState(() {
-        date = "${picked.day} ${_monthName(picked.month)} ${picked.year}";
+        // Format as YYYY-MM-DD for MySQL DATE column
+        date =
+            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
       });
     }
-  }
-
-  String _monthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return months[month - 1];
   }
 
   @override
